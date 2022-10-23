@@ -1,0 +1,31 @@
+{
+    "ENABLE_MOTORS": true,
+    "ENABLE_SERVOS": true,
+    "ENABLE_COMPASS": false,
+
+    "GPIO_LEFT_FW":5,
+    "GPIO_LEFT_BW":4,
+
+    "GPIO_RIGHT_FW":0,
+    "GPIO_RIGHT_BW":2,   
+
+    "GPIO_SCL":16,
+    "GPIO_SDA":13,
+
+    "GPIO_SERVO_NOD": 14,
+    "GPIO_SERVO_ROLL": 12,
+
+    "SERVO_NOD_DUTYCYCLE_MIN": 40,
+    "SERVO_NOD_DUTYCYCLE_MAX": 80,
+
+    "SERVO_ROLL_DUTYCYCLE_MIN": 40,
+    "SERVO_ROLL_DUTYCYCLE_MAX": 80,
+
+    "DUTYCYCLE_LOW":  512,
+    "DUTYCYCLE_HIGH": 0,
+    "DUTYCYCLE_STOP": 1023,
+    "DUTYCYCLE_MAX": 0,
+
+    "PWM_SERVO_FREQ": 50,
+    "PWM_MOTOR_FREQ": 50
+}

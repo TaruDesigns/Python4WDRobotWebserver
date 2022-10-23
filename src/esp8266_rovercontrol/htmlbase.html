@@ -1,0 +1,107 @@
+<html>
+	<head>
+		<title>Explorer Control Panel</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+			<link rel="icon" href="data:,">
+				<style>
+					html{font-family: Helvetica; display:inline-block; margin: 0px auto; text-align: center;}
+  					h1{color: #0F3376; padding: 2vh;}
+  					p{font-size: 1.5rem;}
+  					.button{display: inline-block; background-color: #000000; border: none; 
+  					border-radius: 4px; color: white; padding: 16px 40px; text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}
+					.buttonBlue{background-color: #4286f4;}
+  					.buttonRed{background-color: #eb1a13;}
+  					.buttonYellow{background-color: #b9ae16e0;}
+  					.buttonGreen{background-color: #35996a;}
+  				</style>
+			</head>
+			<body>
+				<button class="button buttonRed" id="stopall" onclick="enableWebREPL(this)">ENABLE WEBREPL</button>
+				<h1>Speed Control Panel</h1>
+					<p>Current Speed: 
+						<strong id="speedText">{speed}</strong>
+						Current Direction: 
+						<strong id="directionText">{direction}</strong>
+					</p>     
+					<p>
+							<button class="button buttonRed" id="stopall" onclick="updateMotors(this)">STOP</button>
+  					<input type="range" onchange="passfunction(this)" id="speedSlider" min="0" max="1" value="%SPEED%" step="1" class="slider"></p>	   
+					<p>
+							<button class="button buttonBlue" id="fw" onclick="updateMotors(this)">Forward</button>
+					<p>
+							<button class="button buttonYellow" id="lt" onclick="updateMotors(this)">Left</button>
+							<button class="button buttonYellow" id = "rt" onclick="updateMotors(this)">Right</button>
+					</p> 
+					<p>
+						    <button class="button buttonGreen" id="bw" onclick="updateMotors(this)">Backward</button>
+				    </p>
+				<h1>Servo Control Panel
+					<p>Nod:<span id="nodSliderText">%NODANGLE%</span></p>
+  					<p><input type="range" onchange="updateSlider(this)" id="nodSlider" min="20" max="95" value="%NODANGLE%" step="1" class="slider"></p>
+  					<p>Roll:<span id="rollSliderText">%ROLLANGLE%</span></p>
+					<p><input type="range" onchange="updateSlider(this)" id="rollSlider" min="20" max="130" value="%ROLLANGLE%" step="1" class="slider"></p>
+  					<script>
+  					function updateSlider(element) {
+					  document.getElementById(element.id + "Text").innerHTML = element.value;
+  					  console.log(element.value);
+  					  console.log(element.id);
+  					  var xhr = new XMLHttpRequest();
+  					  xhr.open("GET", "/servos/?" + element.id + "="+ element.value, true);
+  					  xhr.send();
+  					}
+  					</script>
+  					<script>
+  					function updateMotors(element) {
+						var speed = document.getElementById("speedSlider").value;
+						console.log(speed);
+						var speedtext = "";
+						switch(speed){
+							case "0":
+								console.log("Low");
+								speedtext = "low";
+								document.getElementById("speedText").innerHTML = "Low";
+								break;
+							case "1":
+								console.log("High");
+								speedtext= "high";
+								document.getElementById("speedText").innerHTML = "High";
+								break;
+						}
+						switch(element.id){
+							case "stopall":
+								document.getElementById("speedText").innerHTML = "STOPPED";
+								document.getElementById("directionText").innerHTML = "STOPPED";
+								break;
+							case "fw":
+								document.getElementById("directionText").innerHTML = "Forward";		
+								break;
+							case "bw":
+								document.getElementById("directionText").innerHTML = "Backward";
+								break;
+							case "lt":
+								document.getElementById("directionText").innerHTML = "Left";
+								break;
+							case "rt":
+								document.getElementById("directionText").innerHTML = "Right";
+								break;
+						}
+						var urlform = "/motors/?speed=" + speedtext + "&direction=" + element.id;
+						console.log(urlform);
+  					  	var xhr = new XMLHttpRequest();
+  					  	xhr.open("GET", urlform, true);
+  					  	xhr.send();
+  					}
+					function passfunction(element){
+						//pass
+					}
+  					</script>	
+  					<script>
+						function enableWebREPL(element) {
+						  var xhr = new XMLHttpRequest();
+						  xhr.open("GET", "/webrepl/?", true);
+						  xhr.send();
+						}
+						</script>									
+				</h1>                                     
+			</body>
+		</html>
