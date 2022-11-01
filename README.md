@@ -3,7 +3,7 @@ This is a project to control a rover/robot through an ESP8266/ESP32 running webs
 
 # The Robot
 The robot is one of these standard 4WD robot kits you can get on AliExpress. There are many sellers and variations on the same chassis
-![4wdcar](images/car_example.JPG "Car Example")
+![4wdcar](img/car_example.JPG "Car Example")
 The construction is very simple: Two plexiglass sheets, four (geared) motors attached to one of them, and plenty of space and holes for electronics
 
 # Table of Contents
@@ -23,8 +23,8 @@ List of components used:
 * L9110 H Bridge: I am using a premade board with 4 of the ICs in them, but a similar H Bridge board would suffice.
 * Power Bank: USB Power Bank
 * HMC5883L: Used as a compass/heading indicator.
-* 9G Servos: ![pantilt](images/9gservo.JPG "9G Servo")
-* Pan/Tilt servo brackets ![pantilt](images/pantilt_bracket.JPG "PanTilt Bracket"): Used to mount the camera. They are cheap but 3D Printed altenatives should be just as good!
+* 9G Servos: ![pantilt](img/9gservo.JPG "9G Servo")
+* Pan/Tilt servo brackets ![pantilt](img/pantilt_bracket.JPG "PanTilt Bracket"): Used to mount the camera. They are cheap but 3D Printed altenatives should be just as good!
 
 # Power Supply Considerations
 
