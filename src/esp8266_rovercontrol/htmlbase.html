@@ -37,18 +37,35 @@
 				    </p>
 				<h1>Servo Control Panel
 					<p>Nod:<span id="nodSliderText">%NODANGLE%</span></p>
-  					<p><input type="range" onchange="updateSlider(this)" id="nodSlider" min="20" max="95" value="%NODANGLE%" step="1" class="slider"></p>
+  					<p><input type="range" onchange="updateNod(this)" id="nodSlider" min="20" max="95" value="%NODANGLE%" step="1" class="slider"></p>
   					<p>Roll:<span id="rollSliderText">%ROLLANGLE%</span></p>
-					<p><input type="range" onchange="updateSlider(this)" id="rollSlider" min="20" max="130" value="%ROLLANGLE%" step="1" class="slider"></p>
+					<p><input type="range" onchange="updateRoll(this)" id="rollSlider" min="20" max="130" value="%ROLLANGLE%" step="1" class="slider"></p>
   					<script>
-  					function updateSlider(element) {
+  					function updateNod(element) {
 					  document.getElementById(element.id + "Text").innerHTML = element.value;
   					  console.log(element.value);
   					  console.log(element.id);
   					  var xhr = new XMLHttpRequest();
-  					  xhr.open("GET", "/servos/?" + element.id + "="+ element.value, true);
-  					  xhr.send();
+					  var params =  element.id + "="+ element.value
+  					  xhr.open("POST", "/servos/nod/", true);
+					  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+					  console.log("Headers set");
+  					  xhr.send(params);
   					}
+					</script>
+					<script>
+					function updateRoll(element) {
+					  document.getElementById(element.id + "Text").innerHTML = element.value;
+  					  console.log(element.value);
+  					  console.log(element.id);
+  					  var xhr = new XMLHttpRequest();
+					  var params =  element.id + "="+ element.value
+  					  xhr.open("POST", "/servos/roll/", true);
+					  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+					  console.log("Headers set");
+  					  xhr.send(params);
+  					}	
+
   					</script>
   					<script>
   					function updateMotors(element) {
@@ -85,11 +102,15 @@
 								document.getElementById("directionText").innerHTML = "Right";
 								break;
 						}
-						var urlform = "/motors/?speed=" + speedtext + "&direction=" + element.id;
+						var urlform = "/motors/";
+						var params = "speed=" + speedtext + "&direction=" + element.id;
 						console.log(urlform);
   					  	var xhr = new XMLHttpRequest();
-  					  	xhr.open("GET", urlform, true);
-  					  	xhr.send();
+						
+  					  	xhr.open("POST", urlform, true);
+						xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+						console.log("Headers set");
+  					  	xhr.send(params);
   					}
 					function passfunction(element){
 						//pass

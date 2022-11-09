@@ -10,6 +10,7 @@ try:
 except:
   print("Cannot load JSON Config! Entering WebREPL")
   webrepl.start()
+  raise("Cannot load JSON Config! Entering WebREPL")
 
 # Initialize Peripherals
 if config["ENABLE_MOTORS"]:
@@ -22,35 +23,11 @@ if config["ENABLE_COMPASS"]:
   from compasscontrol import CompassControl
   compass = CompassControl(config)
 
-# Initialize Webserver
-from webserver import WebServer
-server = WebServer(config, "Test")
+from webserver_microdot import mainserver
 
-
-while True:
-  try:
-    # Handle request
-    endpoint, params = server.handle_connection()
-    try:
-      # TODO Add better error handling
-      if "webrepl" in endpoint:
-        # Break Loop to enter WebREPL
-        break
-      elif config["ENABLE_MOTORS"] and "motors" in endpoint:
-        motors.motor_handler(params)
-      elif config["ENABLE_SERVOS"] and "servos" in endpoint:
-        servos.servo_handler(params)
-    except Exception as e:
-      #TODO Add better error handling
-      print(e)
-    #Serve webpage to client
-    # TODO add the compass heading on screen
-    # TODO Add CAM on the HTML
-    server.serve_webpage()
-  except Exception as e:
-    print("Error main!")
-    print(e)
-    raise e
+print("Starting Webserver")
+mainserver.run(port=80)
+print("This is after AppRun")
 
 # If loop ends, start webrepl
 
