@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<!--
+    The MIT License (MIT)
+    
+    This file makes use of the joystick library by Bobboteck: (https://github.com/bobboteck/JoyStick).
+    Copyright (c) 2015 Roberto D'Amico (Bobboteck).
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    -->
+<html>
+    <head>
+        <title>Joy</title>
+        <meta charset="utf-8">
+        <meta name="description" content="Rover Control Panel>
+        <meta name="author" content="Hawawa">
+        <style>
+            *
+            {
+            box-sizing: border-box;
+            }
+            body
+            {
+            margin: 5px;
+            padding: 5px;
+            font-family: monospace;
+            }
+            .row
+            {
+            display: inline-flex;
+            clear: both;
+            }
+            .columnLateral
+            {
+            float: left;
+            width: 15%;
+            min-width: 300px;
+            }
+            .columnMiddle
+            {
+            float: left;
+            width: 70%;
+            min-width: 300px;
+            }
+            #joy2Div
+            {
+            width:200px;
+            height:200px;
+            margin:50px
+            }
+            #joystick
+            {
+            border: 1px solid #FF0000;
+            }
+            #joystick2
+            {
+            border: 1px solid #0000FF;
+            }
+        </style>
+        <script src="joy.js"></script>
+    </head>
+    <body>
+        <div class="row">
+        
+
+        <div class="row">
+            <div class="columnLateral">
+                <div id="joy_motors" style="width:200px;height:200px;margin:25px"></div>
+                <h1>Motors</h1>
+            </div>
+            <div class="columnMiddle">
+				<h1 class="columnMiddle">ROVER CONTROL PANEL</h1>
+            </div>
+            <div class="columnLateral">
+                <div id="joy_servos" style="width:200px;height:200px;margin:25px"></div>
+                <h1>Servos</h1>
+            </div>
+        </div>
+        <script>
+			// Start websocket
+            var connection = new WebSocket('ws://localhost:80/ws');
+                 connection.onopen = function () {
+                     connection.send('Connect ' + new Date());
+                 };
+                 connection.onerror = function (error) {
+                     console.log('WebSocket Error ', error);
+                     alert('WebSocket Error ', error);
+                 };
+                 connection.onmessage = function (e) {
+                     console.log('Server: ', e.data);
+                 };
+            
+                 function send(x,y,speed,angle,type){
+                     var data = {"x":x,"y":y,"speed":speed,"angle":angle, "type":type};
+                     data = JSON.stringify(data);
+					 console.log("Ready to send")
+                     console.log(data);
+                     connection.send(data);
+                 }
+        </script>
+		<script>
+			// Helper math functions
+			function getSpeed(x,y){
+            		return Math.round(100 * Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) / 100)
+            	}
+            
+            function getAngle(x,y){
+                var angle_in_degrees;
+            	var angle = Math.atan2(y, x);
+            	
+            	if (Math.sign(angle) == -1) {
+            		angle_in_degrees = Math.round(-angle * 180 / Math.PI);
+            	}
+            	else {
+            		angle_in_degrees =Math.round( 360 - angle * 180 / Math.PI);
+            	}
+				return angle_in_degrees
+            }
+		</script>
+        <script type="text/javascript">
+			//Define Motors Joystick
+			let params_motors = {}
+            var joy_motors = new JoyStick('joy_motors', params_motors, function(stickData) {
+            	var x,y, speed,angle, type
+            	x = stickData.x
+            	y = stickData.y
+            	speed = getSpeed(x,y)
+				angle = getAngle(x,y)
+				type = "motors"
+            	send(x,y,speed,angle,type)
+            });
+            
+        </script>
+        <script type="text/javascript">
+			// Define Servos Joystick
+			let params_servos = {"autoReturnToCenter": false}
+            var joy_servos = new JoyStick('joy_servos', params_servos, function(stickData) {
+            	var x,y, speed,angle, type
+            	x = stickData.x
+            	y = stickData.y
+            	speed = getSpeed(x,y)
+				angle = getAngle(x,y)
+				type = "servos"
+            	send(x,y,speed,angle,type)
+            });
+            
+        </script>		
+    </body>
+</html>

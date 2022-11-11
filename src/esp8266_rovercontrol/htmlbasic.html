@@ -47,7 +47,7 @@
   					  console.log(element.id);
   					  var xhr = new XMLHttpRequest();
 					  var params =  element.id + "="+ element.value
-  					  xhr.open("POST", "/servos/nod/", true);
+  					  xhr.open("POST", "/servos/nod/" + element.value, true);
 					  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 					  console.log("Headers set");
   					  xhr.send(params);
@@ -60,7 +60,7 @@
   					  console.log(element.id);
   					  var xhr = new XMLHttpRequest();
 					  var params =  element.id + "="+ element.value
-  					  xhr.open("POST", "/servos/roll/", true);
+  					  xhr.open("POST", "/servos/roll/" + element.value, true);
 					  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 					  console.log("Headers set");
   					  xhr.send(params);

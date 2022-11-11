@@ -1,2 +1,7 @@
 wlansettings.py
 src/esp8266_rovercontrol/esp8266-20220618-v1.19.1.bin
+src/esp8266_rovercontrol/mpy
+src/esp8266_rovercontrol/microdot_websocket.mpy
+src/esp8266_rovercontrol/microdot_websocket.py
+src/esp8266_rovercontrol/microdot.mpy
+src/esp8266_rovercontrol/microdot.py
