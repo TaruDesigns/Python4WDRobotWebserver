@@ -23,7 +23,10 @@ if config["ENABLE_COMPASS"]:
   from compasscontrol import CompassControl
   compass = CompassControl(config)
 
-from webserver_microdot import mainserver
+if config["ENABLE_WS"]:
+  from webserver_microdot_ws import mainserver
+else:
+  from webserver_microdot import mainserver
 
 print("Starting Webserver")
 mainserver.run(port=80)

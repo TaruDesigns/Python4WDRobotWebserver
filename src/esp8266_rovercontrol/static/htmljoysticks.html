@@ -27,7 +27,7 @@
     <head>
         <title>Joy</title>
         <meta charset="utf-8">
-        <meta name="description" content="Rover Control Panel>
+        <meta name="description" content="Rover Control Panel">
         <meta name="author" content="Hawawa">
         <style>
             *
@@ -72,12 +72,29 @@
             border: 1px solid #0000FF;
             }
         </style>
-        <script src="joy.js"></script>
+		<style>
+			html{font-family: Helvetica; display:inline-block; margin: 0px auto; text-align: center;}
+  			h1{color: #0F3376; padding: 2vh;}
+  			p{font-size: 1.5rem;}
+  			.button{display: inline-block; background-color: #000000; border: none; 
+  			border-radius: 4px; color: white; padding: 16px 40px; text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}
+			.buttonBlue{background-color: #4286f4;}
+  			.buttonRed{background-color: #eb1a13; display: block;}
+  			.buttonYellow{background-color: #b9ae16e0;}
+  			.buttonGreen{background-color: #35996a;}
+  		</style>        
+        <script src="/static/joy.js"></script>
     </head>
     <body>
         <div class="row">
-        
-
+            <button class="button buttonRed" id="stopall" onclick="enableWebREPL(this)">ENABLE WEBREPL</button>
+            <script>
+                function enableWebREPL(element) {
+                  var xhr = new XMLHttpRequest();
+                  xhr.open("GET", "/webrepl/", true);
+                  xhr.send();
+                }
+                </script>	            
         <div class="row">
             <div class="columnLateral">
                 <div id="joy_motors" style="width:200px;height:200px;margin:25px"></div>
@@ -93,7 +110,7 @@
         </div>
         <script>
 			// Start websocket
-            var connection = new WebSocket('ws://localhost:80/ws');
+            var connection = new WebSocket('ws://192.168.1.53:80/wscontrol');
                  connection.onopen = function () {
                      connection.send('Connect ' + new Date());
                  };

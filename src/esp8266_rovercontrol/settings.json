@@ -1,6 +1,6 @@
 {
-    "ENABLE_MOTORS": true,
-    "ENABLE_SERVOS": true,
+    "ENABLE_MOTORS": false,
+    "ENABLE_SERVOS": false,
     "ENABLE_COMPASS": false,
 
     "GPIO_LEFT_FW":5,
@@ -27,5 +27,7 @@
     "DUTYCYCLE_MAX": 0,
 
     "PWM_SERVO_FREQ": 50,
-    "PWM_MOTOR_FREQ": 50
+    "PWM_MOTOR_FREQ": 50,
+
+    "ENABLE_WS": true
 }
