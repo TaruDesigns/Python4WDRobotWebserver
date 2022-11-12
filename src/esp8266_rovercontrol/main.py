@@ -1,5 +1,5 @@
 # Complete project details at https://RandomNerdTutorials.com
-import json
+import json, gc
 import webrepl
 from time import sleep_ms
 
@@ -29,6 +29,7 @@ else:
   from webserver_microdot import mainserver
 
 print("Starting Webserver")
+gc.collect()
 mainserver.run(port=80)
 print("This is after AppRun")
 

@@ -1,5 +1,7 @@
-from microdot_asyncio import Microdot, send_file
-from microdot_asyncio_websocket import with_websocket
+from microdot import Microdot, send_file
+from microdot_websocket import with_websocket
+import gc
+from time import sleep
 
 mainserver = Microdot()
 
@@ -18,12 +20,15 @@ def static(request, path):
 
 @mainserver.route('/wscontrol')
 @with_websocket
-async def wsmotors(request, ws):
-    # while True:
-        print("Got Websocket Data")
-        data = await ws.receive()
-        print(data)
-        await ws.send(data)
+def wsmotors(request, ws):
+    while True:
+        try:
+            data = ws.receive() 
+            print(data)
+            gc.collect()
+        except:
+            pass
+        sleep(0.016)
      
 @mainserver.route('/webrepl/', methods=['GET', 'POST'])
 def stopserver(request):
@@ -32,5 +37,5 @@ def stopserver(request):
     request.app.shutdown()
     return 'The server is shutting down...'         
 
-print("Starting Server")
-mainserver.run(port=80)
+if __name__ == "__main__":
+    mainserver.run(port=80)
