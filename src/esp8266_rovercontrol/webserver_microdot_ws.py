@@ -2,6 +2,7 @@ from microdot import Microdot, send_file
 from microdot_websocket import with_websocket
 import gc
 from time import sleep
+from json import loads
 
 mainserver = Microdot()
 
@@ -23,14 +24,20 @@ def static(request, path):
 def wsmotors(request, ws):
     while True:
         try:
+            # Catch exception since sometimes the connection is reset
             data = ws.receive() 
             print(data)
+            dataObj = loads(data)
+            if dataObj["type"] == "webrepl":
+                stopserver(request)
+            elif dataObj["type"] == "motors":
+                motors.motors_analog(dataObj["speed"], dataObj["direction"])
             gc.collect()
         except:
             pass
         sleep(0.016)
-     
-@mainserver.route('/webrepl/', methods=['GET', 'POST'])
+  
+@mainserver.route('/webrepl', methods=['GET', 'POST'])
 def stopserver(request):
     #TODO Fix this
     print("Got Webrepl, stopping server") 

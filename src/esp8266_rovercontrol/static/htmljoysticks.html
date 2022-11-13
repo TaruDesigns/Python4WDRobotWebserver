@@ -58,8 +58,8 @@
                              console.log('Server: ', e.data);
                          };
                     
-                        function sendMotors(x,y,speed,angle,type){
-                             var data = {"x":x,"y":y,"speed":speed,"angle":angle, "type":type};
+                        function sendMotors(x,y,speed,angle,direction,type){
+                             var data = {"x":x,"y":y,"speed":speed,"angle":angle, "direction":direction, "type":type};
                              data = JSON.stringify(data);
                              console.log("Ready to send")
                              console.log(data);
@@ -102,7 +102,15 @@
                 <script>
                     // Helper math functions
                     function getSpeed(x,y){
-                            return Math.round(100 * Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) / 100)
+                            // Sqrt of (X^2 + Y^2)
+                            ans = Math.round(
+                                Math.sqrt(
+                                    (Math.pow(x, 2) + Math.pow(y, 2))
+                            ))
+                            if (ans > 100){
+                                ans = 100
+                            }
+                            return ans
                         }
                     
                     function getAngle(x,y){
@@ -125,10 +133,11 @@
                         var x,y, speed,angle, type
                         x = stickData.x
                         y = stickData.y
-                        speed = getSpeed(x,y)
+                        direction = stickData.cardinalDirection
+                        speed = getSpeed(parseInt(x),parseInt(y))
                         angle = getAngle(x,y)
                         type = "motors"
-                        sendMotors(x,y,speed,angle,type)
+                        sendMotors(x,y,speed,angle,direction,type)
                     });
                     
                 </script>

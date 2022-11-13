@@ -4,3 +4,6 @@ microdot*.py
 src/esp8266_rovercontrol/esp8266-20220618-v1.19.1.bin
 src/esp8266_rovercontrol/mpy
 *wstests*
+src/esp8266_rovercontrol/test1.py
+.gitignore
+src/esp8266_rovercontrol/test2.py

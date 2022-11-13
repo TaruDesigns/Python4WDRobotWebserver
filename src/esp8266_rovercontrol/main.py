@@ -1,7 +1,6 @@
 # Complete project details at https://RandomNerdTutorials.com
 import json, gc
-import webrepl
-from time import sleep_ms
+#import webrepl
 
 # Load settings
 try:
@@ -9,7 +8,7 @@ try:
     config = json.load(f)
 except:
   print("Cannot load JSON Config! Entering WebREPL")
-  webrepl.start()
+  # webrepl.start()
   raise("Cannot load JSON Config! Entering WebREPL")
 
 # Initialize Peripherals
@@ -30,9 +29,53 @@ else:
 
 print("Starting Webserver")
 gc.collect()
-mainserver.run(port=80)
+from microdot import Microdot, send_file
+from microdot_websocket import with_websocket
+from time import sleep
+
+mainserver = Microdot()
+
+
+@mainserver.route('/')
+def index(request):
+    return send_file('static/htmljoysticks.html')
+
+@mainserver.route('/static/<path:path>')
+def static(request, path):
+    if '..' in path:
+        # directory traversal is not allowed
+        return 'Not found', 404
+    return send_file('static/' + path)
+
+@mainserver.route('/wscontrol')
+@with_websocket
+def wsmotors(request, ws):
+    print("Preparing WS")
+    while True:
+      try:
+        # Catch exception since sometimes the connection is reset
+        data = ws.receive() 
+        print(data)
+        dataObj = json.loads(data)
+        if dataObj["type"] == "webrepl":
+            stopserver(request)
+        elif dataObj["type"] == "motors":
+            motors.motors_analog(dataObj["speed"], dataObj["direction"])
+        gc.collect()
+      except:
+        pass
+      sleep(0.016)
+  
+@mainserver.route('/webrepl', methods=['GET', 'POST'])
+def stopserver(request):
+    #TODO Fix this
+    print("Got Webrepl, stopping server") 
+    request.app.shutdown()
+    return 'The server is shutting down...'         
+
+mainserver.run(port=5000)
 print("This is after AppRun")
 
 # If loop ends, start webrepl
 
-webrepl.start()
+# webrepl.start()
