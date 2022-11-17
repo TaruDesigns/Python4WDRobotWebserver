@@ -1,6 +1,5 @@
 # Complete project details at https://RandomNerdTutorials.com
 import json, gc
-#import webrepl
 
 # Load settings
 try:
@@ -8,7 +7,6 @@ try:
     config = json.load(f)
 except:
   print("Cannot load JSON Config! Entering WebREPL")
-  # webrepl.start()
   raise("Cannot load JSON Config! Entering WebREPL")
 
 # Initialize Peripherals
@@ -22,11 +20,6 @@ if config["ENABLE_COMPASS"]:
   from compasscontrol import CompassControl
   compass = CompassControl(config)
 
-if config["ENABLE_WS"]:
-  from webserver_microdot_ws import mainserver
-else:
-  from webserver_microdot import mainserver
-
 print("Starting Webserver")
 gc.collect()
 from microdot import Microdot, send_file
@@ -34,7 +27,6 @@ from microdot_websocket import with_websocket
 from time import sleep
 
 mainserver = Microdot()
-
 
 @mainserver.route('/')
 def index(request):
@@ -57,7 +49,7 @@ def wsmotors(request, ws):
         data = ws.receive() 
         print(data)
         dataObj = json.loads(data)
-        if dataObj["type"] == "webrepl":
+        if dataObj["type"] == "stopserver":
             stopserver(request)
         elif dataObj["type"] == "motors":
             motors.motors_analog(dataObj["speed"], dataObj["direction"])
@@ -66,16 +58,11 @@ def wsmotors(request, ws):
         pass
       sleep(0.016)
   
-@mainserver.route('/webrepl', methods=['GET', 'POST'])
+@mainserver.route('/stopserver', methods=['GET', 'POST'])
 def stopserver(request):
     #TODO Fix this
-    print("Got Webrepl, stopping server") 
+    print("Stopping server") 
     request.app.shutdown()
     return 'The server is shutting down...'         
 
 mainserver.run(port=5000)
-print("This is after AppRun")
-
-# If loop ends, start webrepl
-
-# webrepl.start()

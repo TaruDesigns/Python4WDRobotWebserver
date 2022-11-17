@@ -79,12 +79,12 @@ class MotorControl:
         #LEFT FW and RIGHT FW proportional to speed
         self.update_speeds(speedscaled, self.config["MOTOR_DUTYCYCLE_MIN"], speedscaled, self.config["MOTOR_DUTYCYCLE_MIN"])
     elif direction == "NE":
-        # LEFT FW scaled speed, RIGHT FW scaledspeed/2
-        self.update_speeds(speedscaled, self.config["MOTOR_DUTYCYCLE_MIN"], speedscaled//2, self.config["MOTOR_DUTYCYCLE_MIN"])
+        # LEFT FW scaled speed, RIGHT FW scaledspeed/4. NOTE: In this case, lower values are higher speed
+        self.update_speeds(speedscaled, self.config["MOTOR_DUTYCYCLE_MIN"], speedscaled//4, self.config["MOTOR_DUTYCYCLE_MIN"])
         pass
     elif direction == "NW":
         # LEFT FW scaled speed/2, RIGHT FW scaledspeed
-        self.update_speeds(speedscaled//2, self.config["MOTOR_DUTYCYCLE_MIN"], speedscaled, self.config["MOTOR_DUTYCYCLE_MIN"])
+        self.update_speeds(speedscaled//4, self.config["MOTOR_DUTYCYCLE_MIN"], speedscaled, self.config["MOTOR_DUTYCYCLE_MIN"])
         pass
     elif direction == "S":
         # LEFT BW and RIGHT BW scaled speed
@@ -92,7 +92,7 @@ class MotorControl:
         pass
     elif direction == "SE":
         # LEFT BW scaledspeed and RIGHT BW scaled speed/2
-        self.update_speeds(self.config["MOTOR_DUTYCYCLE_MIN"],speedscaled, self.config["MOTOR_DUTYCYCLE_MIN"], speedscaled//2)    
+        self.update_speeds(self.config["MOTOR_DUTYCYCLE_MIN"],speedscaled, self.config["MOTOR_DUTYCYCLE_MIN"], speedscaled//4)    
         pass
     elif direction == "SW":
         # LEFT BW scaledspeed/2 and RIGHT BW scaled speed

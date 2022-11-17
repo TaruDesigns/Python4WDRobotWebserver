@@ -1,13 +1,13 @@
 {
-    "ENABLE_MOTORS": true,
+    "ENABLE_MOTORS": false,
     "ENABLE_SERVOS": false,
     "ENABLE_COMPASS": false,
 
-    "GPIO_LEFT_FW":5,
-    "GPIO_LEFT_BW":4,
+    "GPIO_LEFT_FW":4,
+    "GPIO_LEFT_BW":5,
 
-    "GPIO_RIGHT_FW":0,
-    "GPIO_RIGHT_BW":2,   
+    "GPIO_RIGHT_FW":2,
+    "GPIO_RIGHT_BW":0,   
 
     "GPIO_SCL":16,
     "GPIO_SDA":13,
