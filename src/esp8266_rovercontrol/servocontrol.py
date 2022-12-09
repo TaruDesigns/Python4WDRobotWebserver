@@ -1,5 +1,6 @@
 
 from machine import Pin, PWM
+from helpers import map
 
 class ServoControl:
   """docstring for ServoControl."""
@@ -9,8 +10,6 @@ class ServoControl:
     self.config = config
     self._init_servos()
     self._init_pwm_freqs()
-    self.__duty_nod = 0
-    self.__duty_roll = 0
     print("ServosStarted!")
 
   def reload_config(self, config:dict):
@@ -24,22 +23,24 @@ class ServoControl:
     self._init_servos()
 
   def _init_servos(self):
-    self.servos['nod'] = PWM(Pin(self.config['GPIO_SERVO_NOD']))
-    self.servos['roll'] = PWM(Pin(self.config['GPIO_SERVO_ROLL']))
+    self.servos['NOD'] = PWM(Pin(self.config['GPIO_SERVO_NOD']))
+    self.servos['ROLL'] = PWM(Pin(self.config['GPIO_SERVO_ROLL']))
 
   def _init_pwm_freqs(self):
     for s in self.servos:
       self.servos[s].freq(self.config["PWM_SERVO_FREQ"])  
 
-  def servo_handler(self, params: dict):
-    #TODO Angle-dutycycle conversion
-    #TODO make this look better
-    #TODO Implement "Speed"-> Run to desired location in multiple steps
-    if 'nodSlider' in params:
-      servo = self.servos['nod']
-      angle = int(params["nodSlider"])
-    elif 'rollSlider' in params:
-      servo = self.servos['roll']
-      angle = int(params["rollSlider"])
-    print(servo)
-    servo.duty(int(angle))
+  def servo_handler(self, x: int, y: int):
+    """Moves the servos to the correct position.
+    'X' will map to 'Roll', 'Y' will map to 'Nod'
+    Args:
+        params (dict): Dict with x and y parameters.
+    """
+    #TODO Implement "Speed"-> Run to desired location in multiple steps to avoid jerking motions
+    print("Mapping Servos...")
+    rollscaled = map(x, -100, 100, self.config["SERVO_ROLL_DUTYCYCLE_MIN"], self.config["SERVO_ROLL_DUTYCYCLE_MAX"])
+    nodscaled = map(y, -100, 100, self.config["SERVO_NOD_DUTYCYCLE_MIN"], self.config["SERVO_NOD_DUTYCYCLE_MAX"])
+    print("Roll: " + str(rollscaled) + " Nod: " + str(nodscaled))
+    self.servos['NOD'].duty(nodscaled)
+    self.servos['ROLL'].duty(rollscaled)
+    print("Servos moved")

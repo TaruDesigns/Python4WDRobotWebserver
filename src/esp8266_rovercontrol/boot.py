@@ -1,6 +1,7 @@
 # Initially based on GPIO Webserver from https://RandomNerdTutorials.com
 import network
 from wlansettings import *
+print('Starting ESP....')
 
 import esp
 esp.osdebug(None)

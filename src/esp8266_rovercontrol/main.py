@@ -53,10 +53,12 @@ def wsmotors(request, ws):
             stopserver(request)
         elif dataObj["type"] == "motors":
             motors.motors_analog(dataObj["speed"], dataObj["direction"])
+        elif dataObj["type"] == "servos":
+            servos.servo_handler(int(dataObj["x"]), int(dataObj["y"]))            
         gc.collect()
       except:
         pass
-      sleep(0.016)
+      sleep(0.016) # Loop timer, 60Hz
   
 @mainserver.route('/stopserver', methods=['GET', 'POST'])
 def stopserver(request):

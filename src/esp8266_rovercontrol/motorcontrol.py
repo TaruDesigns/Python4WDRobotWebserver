@@ -1,19 +1,14 @@
 from machine import Pin, PWM
+from helpers import map
 
 class MotorControl:
-  """docstring for MotorControl."""
+  """MotorControl Class. Generic class to control 2 motors using a H bridge (2 motors = 4 PWM outputs)"""
   def __init__(self, config:dict):
     print("Starting motors...")
     self.motors = {}
     self.config = config
     self._init_motors()
     self._init_pwm_freqs()
-    self._speed = ''
-    self._direction = ''
-    self.__duty_left_fw = 0
-    self.__duty_left_bw = 0
-    self.__duty_right_fw = 0
-    self.__duty_right_bw = 0
     print("Motors Started!")
 
   def reload_config(self, config:dict):
@@ -46,31 +41,27 @@ class MotorControl:
       self.motors[m].freq(self.config["PWM_MOTOR_FREQ"]) 
 
   def _motors_stop(self):
-    self.motors['LEFT_FW'].duty(self.config["DUTYCYCLE_STOP"])
-    self.motors['LEFT_BW'].duty(self.config["DUTYCYCLE_STOP"])
-    self.motors['RIGHT_FW'].duty(self.config["DUTYCYCLE_STOP"])
-    self.motors['RIGHT_BW'].duty(self.config["DUTYCYCLE_STOP"])
+    self.motors['LEFT_FW'].duty(self.config["MOTOR_DUTYCYCLE_MIN"])
+    self.motors['LEFT_BW'].duty(self.config["MOTOR_DUTYCYCLE_MIN"])
+    self.motors['RIGHT_FW'].duty(self.config["MOTOR_DUTYCYCLE_MIN"])
+    self.motors['RIGHT_BW'].duty(self.config["MOTOR_DUTYCYCLE_MIN"])
 
   def update_speeds(self, left_fw, left_bw, right_fw, right_bw):
-    self.__duty_left_fw = left_fw
-    self.__duty_left_bw = left_bw
-    self.__duty_right_fw = right_fw
-    self.__duty_right_bw = right_bw
-
-    print("LEFT FW " + str(left_fw))
-    print("LEFT BW " + str(left_bw))
-    print("RIGHT FW " + str(right_fw))    
-    print("RIGHT BW " + str(right_bw))
-
-    self.motors['LEFT_FW'].duty(self.__duty_left_fw)
-    self.motors['LEFT_BW'].duty(self.__duty_left_bw)
-    self.motors['RIGHT_FW'].duty(self.__duty_right_fw)
-    self.motors['RIGHT_BW'].duty(self.__duty_right_bw)    
+    self.motors['LEFT_FW'].duty (left_fw)
+    self.motors['LEFT_BW'].duty (left_bw)
+    self.motors['RIGHT_FW'].duty(right_fw)
+    self.motors['RIGHT_BW'].duty(right_bw)    
 
 
   def motors_analog(self, speed:int, direction:str):
+    """Main Control Function - Analog speed for motors
+
+    Args:
+        speed (int): speed in percentage (0-100)
+        direction (str): cardinal direction
+    """
     #Get scaled value
-    speedscaled = self._map(speed, 0, 100, self.config["MOTOR_DUTYCYCLE_MIN"], self.config["MOTOR_DUTYCYCLE_MAX"])
+    speedscaled = map(speed, 0, 100, self.config["MOTOR_DUTYCYCLE_MIN"], self.config["MOTOR_DUTYCYCLE_MAX"])
     if direction == "C":
         #Deadzone
         self.update_speeds(self.config["MOTOR_DUTYCYCLE_MIN"], self.config["MOTOR_DUTYCYCLE_MIN"], self.config["MOTOR_DUTYCYCLE_MIN"], self.config["MOTOR_DUTYCYCLE_MIN"])
@@ -107,8 +98,7 @@ class MotorControl:
         self.update_speeds(self.config["MOTOR_DUTYCYCLE_MIN"], speedscaled, speedscaled, self.config["MOTOR_DUTYCYCLE_MIN"],)
         pass
                                                      
-  def _map(self, x, in_min, in_max, out_min, out_max):
-    return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
+
 
 
 #Testing from CPython - Removed so it won't use memory on ESP8266
