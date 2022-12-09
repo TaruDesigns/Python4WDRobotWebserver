@@ -17,28 +17,26 @@ ampy put .\main.mpy
 ampy put main.py
 
 
-del helpers.mpy
-ampy rm helpers.mpy
+@REM del helpers.mpy
+@REM ampy rm helpers.mpy
+@REM timeout 1
+@REM python -m mpy_cross helpers.py
+@REM timeout 3
+@REM ampy put .\helpers.mpy
+
+del motorcontrol.mpy
+ampy rm motorcontrol.mpy
 timeout 1
-python -m mpy_cross helpers.py
+python -m mpy_cross motorcontrol.py
 timeout 3
-ampy put .\helpers.mpy
+ampy put .\motorcontrol.mpy
 
-
-
-@REM del motorcontrol.mpy
-@REM ampy rm motorcontrol.mpy
-@REM timeout 1
-@REM python -m mpy_cross motorcontrol.py
-@REM timeout 3
-@REM ampy put .\motorcontrol.mpy
-
-@REM del servocontrol.mpy
-@REM ampy rm servocontrol.mpy
-@REM timeout 1
-@REM python -m mpy_cross servocontrol.py
-@REM timeout 3
-@REM ampy put .\servocontrol.mpy
+del servocontrol.mpy
+ampy rm servocontrol.mpy
+timeout 1
+python -m mpy_cross servocontrol.py
+timeout 3
+ampy put .\servocontrol.mpy
 
 @REM del wlansettings.mpy
 @REM ampy rm wlansettings.mpy

@@ -1,5 +1,6 @@
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <ESPmDNS.h>
 // CameraWebServer Sketch, modified to include the fix for LED Brightness
 //
 // WARNING!!! PSRAM IC required for UXGA resolution and high JPEG quality
@@ -147,7 +148,10 @@ void setup() {
   }
   Serial.println("");
   Serial.println("WiFi connected");
-
+  if(!MDNS.begin("rovercam")) {
+     Serial.println("Error starting mDNS");
+     return;
+  }
   startCameraServer();
 
   Serial.print("Camera Ready! Use 'http://");
