@@ -51,15 +51,25 @@ def wsmotors(request, ws):
         dataObj = json.loads(data)
         if dataObj["type"] == "stopserver":
             stopserver(request)
+            break
         elif dataObj["type"] == "motors":
             motors.motors_analog(dataObj["speed"], dataObj["direction"])
         elif dataObj["type"] == "servos":
-            servos.servo_handler(int(dataObj["x"]), int(dataObj["y"]))            
+            servos.servo_handler(int(dataObj["x"]), int(dataObj["y"]))   
         gc.collect()
+        if config["ENABLE_COMPASS"]:
+          # Update the heading value
+          textheading = compass.get_heading() # x, y , z
+          print(textheading)
+          ws.send(textheading)
       except:
         pass
       sleep(0.016) # Loop timer, 60Hz
   
+
+  
+
+
 @mainserver.route('/stopserver', methods=['GET', 'POST'])
 def stopserver(request):
     #TODO Fix this

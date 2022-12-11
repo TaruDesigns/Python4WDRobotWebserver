@@ -21,7 +21,7 @@
 					<p>
 						Current Direction: 
 						<strong id="directionText">{direction}</strong>
-					</p>     
+					</p>  
 					<p> 
 							<button class="button buttonRed" id="stopall" onclick="sendStopMotors()">STOP MOVEMENT</button>
   					<p>
@@ -56,8 +56,13 @@
                              alert('WebSocket Error ', error);
                          };
                          connection.onmessage = function (e) {
-                             console.log('Server: ', e.data);
+                             console.log('Server: ', e.data); 
+                             document.getElementById('directionText').innerText = e.data  
                          };
+                        window.onbeforeunload = function() {
+                            connection.onclose = function () {}; // disable onclose handler first
+                            connection.close();
+                        };                         
                     
                         function sendMotors(x,y,speed,angle,direction,type){
                              var data = {"x":x,"y":y,"speed":speed,"angle":angle, "direction":direction, "type":type};

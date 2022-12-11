@@ -1,7 +1,7 @@
 {
     "ENABLE_MOTORS": true,
     "ENABLE_SERVOS": true,
-    "ENABLE_COMPASS": false,
+    "ENABLE_COMPASS": true,
 
     "GPIO_LEFT_FW":4,
     "GPIO_LEFT_BW":5,
